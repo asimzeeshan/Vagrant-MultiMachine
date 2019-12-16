@@ -6,8 +6,10 @@ Using this repo, Vagrant deploys multiple machines with (pre-defined) static IPs
 ## How to use?
 
 1. Clone this repo
-2. Edit the array on top of Vagrantfile to suit your needs. Save it
-3. Run `vagrant up` and watch the magic happen
+2. Add your key in [**keys**](keys) directory
+3. Edit the array on top of Vagrantfile to suit your needs. Save it
+4. Run `vagrant up` and watch the magic happen
+5. Login with `root@your-predefined-ip` or `vagrant@your-predefined-ip` or `vagrant ssh`
 
 
 ## OS Types
