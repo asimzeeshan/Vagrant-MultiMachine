@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
 
             vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
             vb.customize ["modifyvm", :id, "--name", machine[:hostname]]
-            vb.customize ["modifyvm", :id, "--ostype", "Debian_64"]
+            vb.customize ["modifyvm", :id, "--ostype", machine[:type]]
             vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
             vb.customize ["modifyvm", :id, "--cpus", machine[:cpu] ]
         end
