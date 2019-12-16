@@ -11,6 +11,19 @@ Using this repo, Vagrant deploys multiple machines with (pre-defined) static IPs
 4. Run `vagrant up` and watch the magic happen
 5. Login with `root@your-predefined-ip` or `vagrant@your-predefined-ip` or `vagrant ssh`
 
+## Sample ansible host file
+```
+[vagrant]
+debian10                         ansible_host=192.168.33.10     ansible_user=vagrant
+debian9                          ansible_host=192.168.33.11     ansible_user=vagrant
+ubuntu1804                       ansible_host=192.168.33.12     ansible_user=vagrant
+ubuntu1910                       ansible_host=192.168.33.13     ansible_user=vagrant
+CentOS7                          ansible_host=192.168.33.14     ansible_user=vagrant
+CentOS8                          ansible_host=192.168.33.15     ansible_user=vagrant    ansible_python_interpreter=/usr/bin/python3
+Fedora31                         ansible_host=192.168.33.16     ansible_user=vagrant
+ubuntu1604                       ansible_host=192.168.33.17     ansible_user=vagrant
+```
+
 
 ## OS Types
 
