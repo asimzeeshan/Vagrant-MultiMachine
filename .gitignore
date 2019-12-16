@@ -1,0 +1,6 @@
+#Ignore vagrant files
+.vagrant
+*-console.log
+
+# Ignore ostypes dump
+ostypes.txt

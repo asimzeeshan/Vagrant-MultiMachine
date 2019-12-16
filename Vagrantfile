@@ -1,52 +1,97 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+servers=[
+  {
+    :hostname => "debian10",
+    :ip => "192.168.33.10",
+    :box => "debian/buster64",
+    :type => "Debian_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "debian9",
+    :ip => "192.168.33.11",
+    :box => "debian/stretch64",
+    :type => "Debian_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "ubuntu1804",
+    :ip => "192.168.33.12",
+    :box => "ubuntu/bionic64",
+    :type => "Ubuntu_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "ubuntu1910",
+    :ip => "192.168.33.13",
+    :box => "ubuntu/disco64",
+    :type => "Ubuntu_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "CentOS7",
+    :ip => "192.168.33.14",
+    :box => "centos/7",
+    :type => "RedHat_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "CentOS8",
+    :ip => "192.168.33.15",
+    :box => "centos/8",
+    :type => "RedHat_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "Fedora31",
+    :ip => "192.168.33.16",
+    :box => "fedora/31-cloud-base",
+    :type => "Fedora_64",
+    :ram => 512,
+    :cpu => 1
+  },
+  {
+    :hostname => "ubuntu1604",
+    :ip => "192.168.33.17",
+    :box => "ubuntu/xenial64",
+    :type => "Ubuntu_64",
+    :ram => 512,
+    :cpu => 1
+  }
+]
+
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian/buster64"
 
-  config.vm.hostname = 'debian10'
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+        node.vm.box = machine[:box]
+        node.vm.hostname = machine[:hostname]
+        node.vm.box_check_update = false
 
-  config.ssh.insert_key = false
-  config.vm.boot_timeout = 800
-  config.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
-  config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+        node.ssh.insert_key = false
+        node.vm.boot_timeout = 800
+        node.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+        node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
 
-  config.vm.box_check_update = false
+        node.vm.network "private_network", ip: machine[:ip]
+        node.vm.provider "virtualbox" do |vb|
+            vb.gui = false
 
-  config.vm.network "forwarded_port", guest: 22, host: 2222
-
-  # config.vm.network "forwarded_port", guest: 22, host: 22022, host_ip: "127.0.0.1"
-
-  config.vm.network "private_network", ip: "192.168.33.10"
-
-  # config.vm.network "public_network"
-
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  config.vm.provider "virtualbox" do |vb|  
-    vb.gui = false
-    # Use VBoxManage to customize the VM. For example to change memory:
-    #vb.customize ["modifyvm", :id, "--memory", "1024"]
-    #vb.customize ["modifyvm", :id, "--name", "LAMP (jessie64)"]
-    vb.customize ["modifyvm", :id, "--ostype", "Debian_64"]
-    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
-    # By default set to 1, change it to amount of your CPUs
-    vb.customize ["modifyvm", :id, "--cpus", "2" ]
-    # Enable NAT
-    # vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-
-    # Or uncomment line above for Automatic set VirtualBox guest CPU count to the number of host cores
-    # WARNING ! Works on Linux Host ONLY
-    # vb.customize ["modifyvm", :id, "--cpus", `grep "^processor" /proc/cpuinfo | wc -l`.chomp ]
-    
-    # Customize the VM name:
-    vb.name = "debian10"
-    # Customize the amount of memory on the VM:
-    vb.memory = "512"
-    # Customize the number of vCPUs on the VM:
-    vb.cpus = 2
-    # Add second network
-    # config.vm.network "private_network", :type => 'dhcp', :name => 'vboxnet1', :adapter => 2
+            vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
+            vb.customize ["modifyvm", :id, "--name", machine[:hostname]]
+            vb.customize ["modifyvm", :id, "--ostype", "Debian_64"]
+            vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+            vb.customize ["modifyvm", :id, "--cpus", machine[:cpu] ]
+        end
+    end
   end
 
   # Enable provisioning with a shell script. Additional provisioners such as
