@@ -91,15 +91,21 @@ Vagrant.configure("2") do |config|
             vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
             vb.customize ["modifyvm", :id, "--cpus", machine[:cpu] ]
         end
+
+        # Enable provisioning with a shell script. Additional provisioners such as
+        # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+        # documentation for more information about their specific syntax and use.
+        node.vm.provision "shell", inline: <<-SHELL
+          sudo mkdir /root/.ssh
+          sudo chmod 700 /root/.ssh
+          sudo touch /root/.ssh/authorized_keys
+          sudo chmod 600 /root/.ssh/authorized_keys
+          wget http://vagrant.me/asim.pub -O ~/.ssh/id_rsa.pub
+          wget http://vagrant.me/ansible.pub -O ~/.ssh/id_rsa.pub
+          cat /root/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+        SHELL
+
     end
   end
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
 
 end
